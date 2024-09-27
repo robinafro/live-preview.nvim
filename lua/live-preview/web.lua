@@ -1,7 +1,7 @@
 local M = {}
 
 local html_template = function(body, stylesheet, script_tag)
-    return [[
+	return [[
         <!DOCTYPE html>
         <html lang="en">
 
@@ -29,7 +29,7 @@ local html_template = function(body, stylesheet, script_tag)
 end
 
 M.md2html = function(md)
-    local script = [[
+	local script = [[
         <script src="live-preview.nvim/static/markdown/marked.min.js"></script>
         <script>
             const markdownText = document.querySelector('.markdown-body').innerHTML;
@@ -37,15 +37,14 @@ M.md2html = function(md)
             document.querySelector('.markdown-body').innerHTML = html;
         </script>
     ]]
-    local stylesheet = [[
+	local stylesheet = [[
         <link rel="stylesheet" href="/live-preview.nvim/static/markdown/github-markdown.min.css">
     ]]
-    return html_template(md, stylesheet, script)
+	return html_template(md, stylesheet, script)
 end
 
-
 M.adoc2html = function(adoc)
-    local script = [[
+	local script = [[
         <script type="module">
             import Asciidoctor from '/live-preview.nvim/static/asciidoc/asciidoctor.min.js'
             const asciidoctor = Asciidoctor();
@@ -63,31 +62,27 @@ M.adoc2html = function(adoc)
             });
         </script>
     ]]
-    local stylesheet = [[
+	local stylesheet = [[
         <link rel="stylesheet" href="/live-preview.nvim/static/asciidoc/asciidoctor.min.css">
     ]]
-    return html_template(adoc, stylesheet, script)
+	return html_template(adoc, stylesheet, script)
 end
-
-
 
 M.toHTML = function(text, filetype)
-    if filetype == 'markdown' then
-        return M.md2html(text)
-    elseif filetype == 'asciidoc' then
-        return M.adoc2html(text)
-    end
+	if filetype == "markdown" then
+		return M.md2html(text)
+	elseif filetype == "asciidoc" then
+		return M.adoc2html(text)
+	end
 end
-
 
 M.handle_body = function(data)
-    local ws_script = "<script src='/live-preview.nvim/static/ws-client.min.js'></script>"
-    if data:match("<head>") then
-        local body = data:gsub("<head>", "<head>" .. ws_script)
-    else
-        local body = ws_script .. data
-    end
+	local ws_script = "<script src='/live-preview.nvim/static/ws-client.min.js'></script>"
+	if data:match("<head>") then
+		return data:gsub("<head>", "<head>" .. ws_script)
+	else
+		return ws_script .. data
+	end
 end
-
 
 return M
